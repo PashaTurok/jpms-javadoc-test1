@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.foo</groupId>
+    <artifactId>com.foo</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+    <name>Jpms Javadoc Test1</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <compiler.plugin.version>3.6.2</compiler.plugin.version>
+        <dependency.plugin.version>2.6</dependency.plugin.version>
+        <processor.plugin.version>4.0-rc1</processor.plugin.version>
+        <war.plugin.version>3.2.2</war.plugin.version>
+
+        <hibernate.version>5.4.14.Final</hibernate.version>
+    </properties>
+
+    <modules>
+        <module>foo.api</module>
+        <module>foo.impl</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <dependency>
+                <groupId>com.foo</groupId>
+                <artifactId>com.foo.api</artifactId>
+                <version>${project.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            
+            <!--### OTHERS ###-->
+            <dependency>
+                <groupId>io.github.classgraph</groupId>
+                <artifactId>classgraph</artifactId>
+                <version>4.6.18</version>
+            </dependency>            
+            
+            <!--### LOGGING ###-->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.8.0-beta4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
+                <version>1.8.0-beta4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>jul-to-slf4j</artifactId>
+                <version>1.8.0-beta4</version>
+            </dependency>            
+
+            <!--### TESTING ###-->
+            <dependency>
+               <groupId>org.junit.jupiter</groupId>
+               <artifactId>junit-jupiter-api</artifactId>
+               <version>5.6.2</version>
+               <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest</artifactId>
+                <version>2.2</version>
+                <scope>test</scope>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M5</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/*IT.java</exclude>
+                    </excludes>
+                    <useSystemClassLoader>false</useSystemClassLoader>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.0.0-M5</version>
+                <executions>
+                    <execution>
+                        <id>integration-tests</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+
+    <reporting>
+         <excludeDefaults>true</excludeDefaults>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.3.0</version>
+                <reportSets>
+                  <reportSet>
+                    <reports>
+                      <report>javadoc-no-fork</report>
+                      <report>test-javadoc-no-fork</report>
+                    </reports>
+                  </reportSet>
+                </reportSets>
+                <configuration>
+                    <doclint>none</doclint>
+                    <dependencySourceIncludes>
+                       <dependencySourceInclude>com.foo:${project.artifactId}</dependencySourceInclude>
+                    </dependencySourceIncludes>
+                    <doctitle>Title - ${project.version}</doctitle>
+                    <includeDependencySources>false</includeDependencySources>
+                    <windowtitle>Title</windowtitle>
+                    <additionalJOptions>
+                        <additionalJOption>--no-module-directories</additionalJOption>
+                    </additionalJOptions>
+                </configuration>
+              </plugin>
+        </plugins>
+    </reporting>
+
+</project>
+
